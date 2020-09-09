@@ -4,12 +4,12 @@ const {program} = require('commander');
 
 // https://github.com/tj/commander.js/blob/HEAD/Readme_zh-CN.md#%E9%80%89%E9%A1%B9
 program.option('-u --url <string>', '[required] miui theme market share url. ')
-    .option('-m --miuiVersion <string>', '[optional] specific miui version in v[10 - 12]. ', 'v12')
+program.option('-m --miuiVersion <string>', '[optional] specific miui version in v[10 - 12]. ', 'v12')
 program.parse(process.argv)
 
 // Required url args missing, show help & exit process with -1.
 if (program.url === undefined) {
-    console.log('Please see miui-theme-downloader --help. ')
+    console.log('Run [miui-theme-downloader --help] for usage. ')
     process.exit(-1)
 }
 
@@ -23,6 +23,7 @@ const API_BASE = 'https://thm.market.xiaomi.com/thm/download/v2/'
 const querystring = require('querystring');
 const fetch = require('node-fetch')
 
+// default miui version is v12.
 const miui_version = program.miuiVersion
 const fetch_url = `${API_BASE}${theme_token}?` + querystring.encode({miuiVersion: miui_version})
 fetch(fetch_url).then(r => r.json().then(json => {
@@ -57,6 +58,7 @@ function download_file(download_url, file_name) {
     const https = require('https');
     const fs = require('fs');
 
+    // TODO: file_name += miui_version.
     const file = fs.createWriteStream(file_name);
     https.get(download_url, response => response.pipe(file));
 }
