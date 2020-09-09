@@ -1,3 +1,5 @@
+#! /usr/bin/env node
+
 // Import yargs lib, import using Destructuring assignment.
 // https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Operators/Destructuring_assignment
 const {program} = require('commander');
