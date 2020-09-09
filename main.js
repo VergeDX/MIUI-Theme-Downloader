@@ -2,7 +2,7 @@
 
 // Import yargs lib, import using Destructuring assignment.
 // https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Operators/Destructuring_assignment
-const {program} = require('commander');
+const {program} = require('commander')
 
 // https://github.com/tj/commander.js/blob/HEAD/Readme_zh-CN.md#%E9%80%89%E9%A1%B9
 program.requiredOption('-u --url <string>', '[required] miui theme market share url. ')
@@ -16,7 +16,7 @@ const theme_token = program.url.split('/')[4]
 const API_BASE = 'https://thm.market.xiaomi.com/thm/download/v2/'
 
 // https://nodejs.org/api/querystring.html
-const querystring = require('querystring');
+const querystring = require('querystring')
 const fetch = require('node-fetch')
 
 // default miui version is v12.
@@ -30,19 +30,19 @@ fetch(fetch_url).then(r => r.json().then(json => {
     }
 
     // https://github.com/Automattic/cli-table
-    const Table = require('cli-table');
-    const table = new Table();
+    const Table = require('cli-table')
+    const table = new Table()
 
     const apiData = json.apiData
     const file_name = decodeURIComponent(apiData.downloadUrl.split('/')[6])
+
     table.push(
         {'File hash': apiData.fileHash},
-        {'File size': (apiData.fileSize / 1e6).toFixed(2) + ' MB'});
+        {'File size': (apiData.fileSize / 1e6).toFixed(2) + ' MB'})
 
-    console.log(table.toString());
-    console.log(`Downloading theme file ${file_name}...`)
-
-    download_file(apiData.downloadUrl, file_name)
+    console.log(table.toString())
+    const real_file_name = download_file(apiData.downloadUrl, file_name)
+    console.log(`Downloading theme file ${real_file_name}...`)
 }))
 
 /**
@@ -51,10 +51,16 @@ fetch(fetch_url).then(r => r.json().then(json => {
  * @see https://stackoverflow.com/questions/11944932/
  */
 function download_file(download_url, file_name) {
-    const https = require('https');
-    const fs = require('fs');
+    const https = require('https')
+    const fs = require('fs')
 
-    // TODO: file_name += miui_version.
-    const file = fs.createWriteStream(file_name);
-    https.get(download_url, response => response.pipe(file));
+    const path = require('path')
+    const file_ext_name = path.extname(file_name)
+    const file_base_name = path.basename(file_name, file_ext_name)
+
+    const real_file_name = `${file_base_name}_${miui_version}${file_ext_name}`
+    const file = fs.createWriteStream(real_file_name)
+    https.get(download_url, response => response.pipe(file))
+
+    return real_file_name
 }
