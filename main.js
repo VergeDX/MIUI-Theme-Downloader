@@ -3,15 +3,9 @@
 const {program} = require('commander');
 
 // https://github.com/tj/commander.js/blob/HEAD/Readme_zh-CN.md#%E9%80%89%E9%A1%B9
-program.option('-u --url <string>', '[required] miui theme market share url. ')
+program.requiredOption('-u --url <string>', '[required] miui theme market share url. ')
 program.option('-m --miuiVersion <string>', '[optional] specific miui version in v[10 - 12]. ', 'v12')
 program.parse(process.argv)
-
-// Required url args missing, show help & exit process with -1.
-if (program.url === undefined) {
-    console.log('Run [miui-theme-downloader --help] for usage. ')
-    process.exit(-1)
-}
 
 // miui theme token, example: miui theme link is:
 // http://zhuti.xiaomi.com/detail/fffc9612-2682-4e61-b390-0504ff154644
