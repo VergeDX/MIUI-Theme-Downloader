@@ -117,3 +117,6 @@ dist
 
 # IntelliJ IDEA
 .idea/
+
+# MIUI theme file
+*.mtz
